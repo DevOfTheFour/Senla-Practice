@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.devofthefour.taskboard.entity.Project;
+import com.devofthefour.taskboard.project.controller.ProjectRequest;
 import com.devofthefour.taskboard.project.repository.ProjectRepository;
 
 @Service
@@ -29,21 +30,31 @@ public class ProjectService {
         return projectRepository.findByName(name);
     }
 
-    public Project create(Project project) {
+    public Project create(ProjectRequest request) {
+        Project project = new Project();
+        applyRequest(project, request);
         if (project.getCreatedAt() == null) {
             project.setCreatedAt(LocalDate.now());
         }
         return projectRepository.create(project);
     }
 
-    public Optional<Project> update(Long id, Project project) {
+    public Optional<Project> update(Long id, ProjectRequest request) {
         return projectRepository.findById(id).map(existing -> {
-            if (project.getCreatedAt() == null) {
-                project.setCreatedAt(existing.getCreatedAt());
+            LocalDate createdAt = existing.getCreatedAt();
+            applyRequest(existing, request);
+            if (existing.getCreatedAt() == null) {
+                existing.setCreatedAt(createdAt);
             }
-            project.setId(id);
-            return projectRepository.save(project);
+            return projectRepository.save(existing);
         });
+    }
+
+    private void applyRequest(Project project, ProjectRequest request) {
+        project.setName(request.getName());
+        project.setDescription(request.getDescription());
+        project.setCreatedAt(request.getCreatedAt());
+        project.setStatus(request.getStatus());
     }
 
     public boolean delete(Long id) {

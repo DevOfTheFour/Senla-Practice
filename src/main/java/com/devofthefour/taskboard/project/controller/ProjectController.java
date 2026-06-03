@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.devofthefour.taskboard.entity.Project;
 import com.devofthefour.taskboard.project.service.ProjectService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/projects")
 public class ProjectController {
@@ -38,13 +40,13 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ResponseEntity<Project> create(@RequestBody Project project) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(projectService.create(project));
+    public ResponseEntity<Project> create(@Valid @RequestBody ProjectRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(projectService.create(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Project> update(@PathVariable Long id, @RequestBody Project project) {
-        return projectService.update(id, project)
+    public ResponseEntity<Project> update(@PathVariable Long id, @Valid @RequestBody ProjectRequest request) {
+        return projectService.update(id, request)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

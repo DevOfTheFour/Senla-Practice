@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.devofthefour.taskboard.comment.service.CommentService;
 import com.devofthefour.taskboard.entity.Comment;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/comments")
 public class CommentController {
@@ -43,13 +45,13 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<Comment> create(@RequestBody Comment comment) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.create(comment));
+    public ResponseEntity<Comment> create(@Valid @RequestBody CommentRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(commentService.create(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Comment> update(@PathVariable Long id, @RequestBody Comment comment) {
-        return commentService.update(id, comment)
+    public ResponseEntity<Comment> update(@PathVariable Long id, @Valid @RequestBody CommentRequest request) {
+        return commentService.update(id, request)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

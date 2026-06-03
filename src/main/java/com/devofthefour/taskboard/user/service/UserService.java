@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.devofthefour.taskboard.entity.User;
+import com.devofthefour.taskboard.user.controller.UserRequest;
 import com.devofthefour.taskboard.user.repository.UserRepository;
 
 @Service
@@ -33,21 +34,31 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public User create(User user) {
+    public User create(UserRequest request) {
+        User user = new User();
+        applyRequest(user, request);
         if (user.getRegistrationDate() == null) {
             user.setRegistrationDate(LocalDate.now());
         }
         return userRepository.create(user);
     }
 
-    public Optional<User> update(Long id, User user) {
+    public Optional<User> update(Long id, UserRequest request) {
         return userRepository.findById(id).map(existing -> {
-            if (user.getRegistrationDate() == null) {
-                user.setRegistrationDate(existing.getRegistrationDate());
+            LocalDate registrationDate = existing.getRegistrationDate();
+            applyRequest(existing, request);
+            if (existing.getRegistrationDate() == null) {
+                existing.setRegistrationDate(registrationDate);
             }
-            user.setId(id);
-            return userRepository.save(user);
+            return userRepository.save(existing);
         });
+    }
+
+    private void applyRequest(User user, UserRequest request) {
+        user.setName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setRegistrationDate(request.getRegistrationDate());
+        user.setRole(request.getRole());
     }
 
     public boolean delete(Long id) {

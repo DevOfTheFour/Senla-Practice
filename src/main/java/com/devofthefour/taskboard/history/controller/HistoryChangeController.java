@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.devofthefour.taskboard.entity.HistoryChange;
 import com.devofthefour.taskboard.history.service.HistoryChangeService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/history-changes")
 public class HistoryChangeController {
@@ -38,13 +40,13 @@ public class HistoryChangeController {
     }
 
     @PostMapping
-    public ResponseEntity<HistoryChange> create(@RequestBody HistoryChange historyChange) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(historyChangeService.create(historyChange));
+    public ResponseEntity<HistoryChange> create(@Valid @RequestBody HistoryChangeRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(historyChangeService.create(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<HistoryChange> update(@PathVariable Long id, @RequestBody HistoryChange historyChange) {
-        return historyChangeService.update(id, historyChange)
+    public ResponseEntity<HistoryChange> update(@PathVariable Long id, @Valid @RequestBody HistoryChangeRequest request) {
+        return historyChangeService.update(id, request)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }

@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.devofthefour.taskboard.entity.Task;
 import com.devofthefour.taskboard.task.service.TaskService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
@@ -60,13 +62,13 @@ public class TaskController {
     }
 
     @PostMapping
-    public ResponseEntity<Task> create(@RequestBody Task task) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.create(task));
+    public ResponseEntity<Task> create(@Valid @RequestBody TaskRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskService.create(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Task> update(@PathVariable Long id, @RequestBody Task task) {
-        return taskService.update(id, task)
+    public ResponseEntity<Task> update(@PathVariable Long id, @Valid @RequestBody TaskRequest request) {
+        return taskService.update(id, request)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
