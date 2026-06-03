@@ -3,7 +3,6 @@ package com.devofthefour.taskboard.entity;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.hibernate.annotations.Comment;
 import org.springframework.scheduling.config.Task;
 
 import jakarta.persistence.Entity;
