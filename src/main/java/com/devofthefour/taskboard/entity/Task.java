@@ -3,6 +3,8 @@ package com.devofthefour.taskboard.entity;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,10 +32,12 @@ public class Task {
 
     @ManyToOne
     @JoinColumn(name = "project_id")
+    @JsonIgnoreProperties({"tasks"})
     private Project project;
 
     @ManyToOne
     @JoinColumn(name = "assignee_id")
+    @JsonIgnoreProperties({"assignedTasks", "comments"})
     private User assignee;
 
     private String title;

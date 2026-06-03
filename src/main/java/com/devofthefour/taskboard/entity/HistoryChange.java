@@ -2,6 +2,8 @@ package com.devofthefour.taskboard.entity;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,6 +29,7 @@ public class HistoryChange {
 
     @ManyToOne
     @JoinColumn(name = "task_id")
+    @JsonIgnoreProperties({"comments", "historyChanges"})
     private Task task;
 
     private String fieldName;
