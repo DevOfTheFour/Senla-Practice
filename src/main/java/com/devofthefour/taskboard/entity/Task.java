@@ -3,8 +3,6 @@ package com.devofthefour.taskboard.entity;
 import java.time.LocalDate;
 import java.util.List;
 
-import org.hibernate.annotations.Comment;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
